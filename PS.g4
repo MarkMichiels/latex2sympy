@@ -157,7 +157,21 @@ COMMA: ',';
 PERIOD: '.';
 
 fragment WS_CHAR: [ \t\r\n];
-DIFFERENTIAL: 'd' WS_CHAR*? ([a-zA-Z] | '\\' [a-zA-Z]+);
+
+// FIX: DIFFERENTIAL should NOT match operators like \cdot, \times, \div
+// Only match Greek letters and known variable-type commands after 'd'
+fragment DIFFERENTIAL_SUFFIX: 
+    [a-zA-Z]  // single letter like dx, dy
+    | '\\alpha' | '\\beta' | '\\gamma' | '\\delta' | '\\epsilon' | '\\varepsilon'
+    | '\\zeta' | '\\eta' | '\\theta' | '\\vartheta' | '\\iota' | '\\kappa'
+    | '\\lambda' | '\\mu' | '\\nu' | '\\xi' | '\\pi' | '\\varpi'
+    | '\\rho' | '\\varrho' | '\\sigma' | '\\varsigma' | '\\tau' | '\\upsilon'
+    | '\\phi' | '\\varphi' | '\\chi' | '\\psi' | '\\omega'
+    | '\\Alpha' | '\\Beta' | '\\Gamma' | '\\Delta' | '\\Epsilon' | '\\Zeta'
+    | '\\Eta' | '\\Theta' | '\\Iota' | '\\Kappa' | '\\Lambda' | '\\Mu'
+    | '\\Nu' | '\\Xi' | '\\Pi' | '\\Rho' | '\\Sigma' | '\\Tau'
+    | '\\Upsilon' | '\\Phi' | '\\Chi' | '\\Psi' | '\\Omega';
+DIFFERENTIAL: 'd' WS_CHAR*? DIFFERENTIAL_SUFFIX;
 
 EXP_E: 'e' | '\\exponentialE';
 E_NOTATION_E: 'E';
